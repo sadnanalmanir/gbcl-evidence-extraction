@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
@@ -40,7 +39,7 @@ public class Pipeline implements Serializable {
                      boolean runPosTagger,
                      boolean runANNIENETranducer,
                      boolean runCooccurrenceExtractor
-    ) throws GateException, URISyntaxException, FileNotFoundException, IOException {
+    ) throws GateException, URISyntaxException, IOException {
 
         logger.info("Pipeline started....");
 

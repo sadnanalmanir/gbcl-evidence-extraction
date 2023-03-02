@@ -7,20 +7,20 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
 public class Utils {
     private static final Logger logger = LogManager.getLogger(Utils.class);
 
-    public static Map<String, String> initFileIndex(String fileOrDirName) throws IOException, URISyntaxException {
+    public static Map<String, String> initFileIndex(String fileOrDirName) throws IOException {
 
         File fileOrDir = new File(fileOrDirName);
-        Map<String, String> corpus = new TreeMap<String, String>();
+        Map<String, String> corpus = new TreeMap<>();
 
         if (fileOrDir.isDirectory()) {
             String[] list = fileOrDir.list();
+            assert list != null;
             List<String> files = Arrays.asList(list);
             Collections.sort(files);
 

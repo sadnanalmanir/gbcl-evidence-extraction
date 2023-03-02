@@ -11,13 +11,14 @@ import com.martiansoftware.jsap.Switch;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
-    static Set<String> processOnlyDocuments = new HashSet<String>(Collections.singletonList(
+    static Set<String> processOnlyDocuments = new HashSet<>(Collections.singletonList(
             "x"
     ));
 
@@ -47,18 +48,18 @@ public class Main {
      * @param args Arguments to run the pipeline.
      */
     private static void runGbclEvidenceExtraction(String args) {
-        long corpusQueryTime = 0;
+
 
         try {
             long time = System.currentTimeMillis();
 
-            String inputFileOrDirName = null;
-            String xmlOutputDirName = null;
+            String inputFileOrDirName;
+            String xmlOutputDirName;
 
-            String annotationResultsFileName = null;
+            String annotationResultsFileName;
 
-            boolean runPipe = false;
-            boolean runExport = false;
+            boolean runPipe;
+            boolean runExport;
 
             {
                 JSAP jsap = new JSAP();
@@ -137,7 +138,7 @@ public class Main {
                     // Set GATE-X.X installation directory from project.properties in /src/main/resources
                     Properties pro = new Properties();
                     try {
-                        pro.load(new FileInputStream(new File(logger.getClass().getClassLoader().getResource("project.properties").toURI())));
+                        pro.load(Files.newInputStream(new File(logger.getClass().getClassLoader().getResource("project.properties").toURI()).toPath()));
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -200,18 +201,10 @@ public class Main {
                         if (xmlOutputDir != null) {
                             Utils.saveGateXml(doc, new File(xmlOutputDir + "/" + doc.getName() + ".xml"), false);
                         }
-                    /*
-                    RelationSet relSet = RelationSet.getRelations(doc.getAnnotations());
-                    for (Relation r : relSet.getRelations("ToxicityInfo")) {
-                        System.out.println(((FeatureMap) r.getUserData()).get("chemical"));
-                        System.out.println(((FeatureMap) r.getUserData()));
-                    }
-                    */
 
                         Factory.deleteResource(doc);
 
                         logger.info("Processing Document Time " + (System.currentTimeMillis() - time) / 1000 + " seconds = " + (System.currentTimeMillis() - time) / 1000 / 60 + " minutes");
-                        logger.info("Query Document Time " + corpusQueryTime / 1000 + " seconds");
                     }
 
                     logger.info("Processing Corpus Time " + (System.currentTimeMillis() - time) / 1000 + " seconds");
@@ -232,7 +225,7 @@ public class Main {
 
 
                     // target annotations contained in a sentence as a list
-                    List containedAnnotationTypes = Arrays.asList(targetAnnotationTypes);
+                    List<String> containedAnnotationTypes = Arrays.asList(targetAnnotationTypes);
 
                     // GATE Annotated XML files generated from the pipeline execution
                     // Linux path
@@ -240,6 +233,7 @@ public class Main {
                     // Windows path
                     // String xmlOutputDirName = "C:\\Users\\manirm\\Documents\\ProjectData\\croploss-textmining\\corpus\\classified\\annotatedOutput";
 
+                    assert annotationResultsFileName != null;
                     BufferedWriter annBuffWriter = new BufferedWriter(new FileWriter(annotationResultsFileName, false));
 
                     AnnotationExporter annotationExporter = new AnnotationExporter();
@@ -247,7 +241,6 @@ public class Main {
                     // AnnotationExporter.export2CSV(xmlOutputDirName, annBuffWriter);
                     // Latest implementation
                     annotationExporter.exportAnnotations2CSV(sourceAnnotationType, containedAnnotationTypes, xmlOutputDirName, annBuffWriter);
-
                 }
 
             }

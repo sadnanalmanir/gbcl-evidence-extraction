@@ -4,32 +4,22 @@ import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
 import gate.Factory;
-import gate.FeatureMap;
 import gate.Gate;
 import gate.creole.ResourceInstantiationException;
 import gate.util.InvalidOffsetException;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import gate.util.OffsetComparator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.*;
-
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 public class AnnotationExporter {
     private static final Logger logger = LogManager.getLogger(AnnotationExporter.class);
@@ -40,9 +30,7 @@ public class AnnotationExporter {
             Properties pro = new Properties();
             try {
                 //pro.load(new FileInputStream(new File("resources/project.properties")));
-                pro.load(new FileInputStream(new File(logger.getClass().getClassLoader().getResource("project.properties").toURI())));
-            } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
+                pro.load(Files.newInputStream(new File(logger.getClass().getClassLoader().getResource("project.properties").toURI()).toPath()));
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -62,7 +50,7 @@ public class AnnotationExporter {
         }
     }
 
-    protected void exportAnnotations2CSV(String sourceAnnotationType, Collection<String> containedAnnotationTypes, String xmlOutputDirName, BufferedWriter annBuffWriter) throws IOException, URISyntaxException, ResourceInstantiationException, InvalidOffsetException, IOException, URISyntaxException, ResourceInstantiationException {
+    protected void exportAnnotations2CSV(String sourceAnnotationType, Collection<String> containedAnnotationTypes, String xmlOutputDirName, BufferedWriter annBuffWriter) throws InvalidOffsetException, ResourceInstantiationException, IOException {
         // initialize directory with annotated XML files
         Map<String, String> fileIndex = Utils.initFileIndex(xmlOutputDirName);
         // Monitor file currently being processed.
@@ -93,7 +81,7 @@ public class AnnotationExporter {
 
             gate.Document doc = Factory.newDocument(new URL(fileIndex.get(fileName)));
             doc.setName(fileName);
-            writeSentenceAnnotations2CSV(doc, sourceAnnotationType, containedAnnotationTypes, "ann", null, annBuffWriter);
+            writeSentenceAnnotations2CSV(doc, sourceAnnotationType, containedAnnotationTypes, annBuffWriter);
             Factory.deleteResource(doc);
         }
         annBuffWriter.close();
@@ -104,12 +92,9 @@ public class AnnotationExporter {
      * @param doc                      Gate docuent
      * @param sourceAnnotationType     Types of annotation which must be of sentence
      * @param containedAnnotationTypes Types of annotation which must be of sentence
-     * @param annotationOrRelation     Annotation or Relation
-     * @param feature                  Feature if any
      * @param textBuffWriter           Writer for text to a character-output stream
-     * @throws IOException
      */
-    private void writeSentenceAnnotations2CSV(Document doc, String sourceAnnotationType, Collection<String> containedAnnotationTypes, String annotationOrRelation, String feature, BufferedWriter textBuffWriter) throws IOException, InvalidOffsetException {
+    private void writeSentenceAnnotations2CSV(Document doc, String sourceAnnotationType, Collection<String> containedAnnotationTypes, BufferedWriter textBuffWriter) throws IOException, InvalidOffsetException {
 
         // Get all sentences from annotated document
         AnnotationSet sourceAS = doc.getAnnotations().get(sourceAnnotationType);
@@ -127,11 +112,11 @@ public class AnnotationExporter {
         List<String> impactDirectionAnnContent = new ArrayList<>();
         List<String> yieldMentionAnnContent = new ArrayList<>();
 
-        for (int i = 0; i < sourceAnns.size(); i++) {
-            long start = sourceAnns.get(i).getStartNode().getOffset();
-            long end = ((Annotation) sourceAnns.get(i)).getEndNode().getOffset();
+        for (Annotation sourceAnn : sourceAnns) {
+            long start = sourceAnn.getStartNode().getOffset();
+            long end = sourceAnn.getEndNode().getOffset();
 
-            logger.info("");
+
             logger.info("sourceAnnotationType: " + sourceAnnotationType);
             for (String annotationType : containedAnnotationTypes) {
                 logger.info("annotationType: " + annotationType);
@@ -146,35 +131,28 @@ public class AnnotationExporter {
                     for (Annotation ann : annotationTypeMentions) {
                         String annString = doc.getContent().getContent(ann.getStartNode().getOffset(), ann.getEndNode().getOffset()).toString().replace("\n", " ").trim();
                         logger.info("annString: " + annString);
-                        if (annString != null) {
-                            if (annotationType.equals("Pest")) {
-                                pestAnnContent.add(annString);
-                            }
-
-                            if (annotationType.equals("Crop")) {
-                                cropAnnContent.add(annString);
-                            }
-
-                            if (annotationType.equals("Location")) {
-                                locationAnnContent.add(annString);
-                            }
-                            if (annotationType.equals("ImpactNumber")) {
-                                impactNumberAnnContent.add(annString);
-                            }
-                            if (annotationType.equals("ImpactNumberUnit")) {
-                                impactNumberUnitAnnContent.add(annString);
-                            }
-                            if (annotationType.equals("ImpactDirection")){
-                                impactDirectionAnnContent.add(annString);
-                            }
-                            if (annotationType.equals("YieldMention")){
-                                yieldMentionAnnContent.add(annString);
-                            }
-
+                        if (annotationType.equals("Pest")) {
+                            pestAnnContent.add(annString);
                         }
-
+                        if (annotationType.equals("Crop")) {
+                            cropAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("Location")) {
+                            locationAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("ImpactNumber")) {
+                            impactNumberAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("ImpactNumberUnit")) {
+                            impactNumberUnitAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("ImpactDirection")) {
+                            impactDirectionAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("YieldMention")) {
+                            yieldMentionAnnContent.add(annString);
+                        }
                     }
-
                 }
             }
             if (textBuffWriter != null) {
@@ -192,7 +170,7 @@ public class AnnotationExporter {
                         "\n");
                 //textBuffWriter.write(doc.getName() + "\t" + annString + "\t" + (String) ann.getFeatures().get("Modifier") + "\t" + (String) ann.getFeatures().get("Object") + "\t" + (String) ann.getFeatures().get("Protein") + "\n");
             }
-
+            // reset lists
             pestAnnContent.clear();
             cropAnnContent.clear();
             locationAnnContent.clear();
@@ -218,7 +196,7 @@ public class AnnotationExporter {
 
 
         // target annotations contained in a sentence as a list
-        List containedAnnotationTypes = Arrays.asList(targetAnnotationTypes);
+        List<String> containedAnnotationTypes = Arrays.asList(targetAnnotationTypes);
 
         // GATE Annotated XML files generated from the pipeline execution
         // Linux path
