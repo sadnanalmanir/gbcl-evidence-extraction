@@ -42,12 +42,12 @@
             <version>8.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/uk.ac.gate.plugins/annie -->
-        <dependency>
+        <!--dependency>
             <groupId>uk.ac.gate.plugins</groupId>
             <artifactId>annie</artifactId>
             <version>9.1</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency-->
 
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
         <dependency>

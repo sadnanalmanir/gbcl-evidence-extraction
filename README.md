@@ -8,7 +8,7 @@ from the documents which are chosen based on the annotations submitted by the us
 results are saved in a single spreadsheet in TSV format.
 
 ## Main components
-- GATE NLP installation
+- GATE NLP installation **v8.X only**
 - `Main.java` contains command line options for I/O
 - `Pipeline.java` contains GATE plugins, gazetteers, JAPE rules
 - `CooccerenceMatcher.java` depends on the `CooccerenceMatcher.jape`
