@@ -24,10 +24,10 @@ public class CooccurrenceMatcher {
         List<Annotation> sentencesAnns = new ArrayList<>(sentenceAs);
         Collections.sort(sentencesAnns, new OffsetComparator());
 
-        for (int i = 0; i < sentencesAnns.size() - contextSize; i++) {
+        for (int i = 0; i < sentencesAnns.size() - (contextSize-1); i++) {
             long start = sentencesAnns.get(i).getStartNode().getOffset();
             long end = ((Annotation)sentencesAnns.get(i+(contextSize-1))).getEndNode().getOffset();
-
+            logger.info("start = "+ start +  "end = " + end);
 
             FeatureMap features = Factory.newFeatureMap();
             logger.info("Search for annotations "+annotationTypes +" in sentence window "+contextSize);

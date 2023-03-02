@@ -38,8 +38,8 @@ Rule:extract
         //List annotationTypes = Arrays.asList(new String[]{"Pest"});
         //List annotationTypes = Arrays.asList(new String[]{"Pest", "ImpactNumberUnit", "ImpactDirection", "YieldMention"});
 		om.annotate(doc, annotationTypes, "Coo_Export", 1);
-		//om.annotate(doc, annotationTypes, "Coo_Export", 2);
-		//om.annotate(doc, annotationTypes, "Coo_Export", 3);
+		om.annotate(doc, annotationTypes, "Coo_Export", 2);
+		om.annotate(doc, annotationTypes, "Coo_Export", 3);
 	}
 	catch(Exception e) {
 		e.printStackTrace();

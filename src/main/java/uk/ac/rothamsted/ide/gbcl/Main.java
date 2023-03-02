@@ -17,9 +17,7 @@ import java.util.*;
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
-    static long corpusQueryTime = 0;
-
-    static Set<String> processOnlyDocuments = new HashSet<String>(Arrays.asList(
+    static Set<String> processOnlyDocuments = new HashSet<String>(Collections.singletonList(
             "x"
     ));
 
@@ -119,12 +117,12 @@ public class Main {
 
                 runPipe = config.getBoolean("runPipe");
                 if (runPipe) {
-                    logger.info("runPipe: " + runPipe);
+                    logger.info("runPipe: " + true);
                 }
 
                 runExport = config.getBoolean("runExport");
                 if (runExport) {
-                    logger.info("runExport" + true);
+                    logger.info("runExport: " + true);
                 }
 
 
@@ -140,8 +138,6 @@ public class Main {
                     Properties pro = new Properties();
                     try {
                         pro.load(new FileInputStream(new File(logger.getClass().getClassLoader().getResource("project.properties").toURI())));
-                    } catch (FileNotFoundException e1) {
-                        e1.printStackTrace();
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
