@@ -25,11 +25,13 @@ producing the final annotations
 
 1. [Download](https://gate.ac.uk/download/) and install GATE
 2. Set path to `GATE_HOME` in `src/main/resources/project.properties`
-3. Before using any plugin, create `plugins` as 
-`[gate-installation-directory]/plugins` and load .
+3. Open GATE GUI and `Load ANNIE System with defaults`. *File->Ready Made Applications->ANNIE*
 4. Select annotations of interest and length of consecutive sentences in 
 `CooccerenceMatcher.jape`.
 5. Select annotations of interest in `Main.java` for exporting results in the spreadsheet.
+
+> Before using any plugin, create `plugins` as
+`[gate-installation-directory]/plugins` and load
 
 > Note: Use [nimbletext](https://nimbletext.com/Live/1498428636/) to format gazetteer with `@id=`
 ## How to run
