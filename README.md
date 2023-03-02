@@ -19,9 +19,9 @@ of length 1/2/3
 producing the final annotations
 
 ## Set environments
-### [GATE NLP vX.X](https://gate.ac.uk/) 
+
 1. [Download](https://gate.ac.uk/download/) and install GATE
-2. Set `GATE_HOME` path in `src/main/resources/project.properties`
+2. Set path to `GATE_HOME` in `src/main/resources/project.properties`
 3. Before using any plugin, create `plugins` as 
 `[gate-installation-directory]/plugins` and load 
 > Note: Use [nimbletext](https://nimbletext.com/Live/1498428636/) to format gazetteer with `@id=`
