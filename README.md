@@ -40,11 +40,13 @@ producing the final annotations
     <artifactId>exec-maven-plugin</artifactId>
     <version>3.1.0</version>
     <configuration>
-        <mainClass>uk.ac.rothamsted.ide.textextractor.Main</mainClass>
+        <mainClass>uk.ac.rothamsted.ide.gbcl.Main</mainClass>
         <arguments>
-            <argument>--extract</argument>
-            <argument>-i H:\html-corpus</argument>
-            <argument>-o H:\text-from-html-corpus</argument>
+            <argument>--pipe</argument>
+            <argument>-i H:\[SOURCE_FILES_DIR]</argument>
+            <argument>-x H:\[ANNOTATED_FILES_DIR]</argument>
+            <argument>--export</argument>
+            <argument>-o [ANNOTATION_FILE_NAME].csv</argument>
         </arguments>
     </configuration>
 </plugin>
@@ -55,11 +57,11 @@ or
 
 For Windows
 ```shell
-mvn exec:java -D'exec.mainClass'='uk.ac.rothamsted.ide.textextractor.Main' -D'exec.args'="--extract -i H:\html-corpus -o H:\extracted-text"
+mvn exec:java -D'exec.mainClass'='uk.ac.rothamsted.ide.gbcl.Main' -D'exec.args'="--pipe -i H:\[SOURCE_FILES_DIR] -x H:\[ANNOTATED_FILES_DIR] --export -o [ANNOTATION_FILE_NAME].csv"
 ```
 
 For Linux
 ```shell
  mvn exec:java -Dexec.mainClass=uk.ac.rothamsted.ide.gbcl.Main \
-     -Dexec.args="--pipe -i /home/sadnan/corpus/croploss/classified -x /home/sadnan/corpus/croploss/classified/annotatedXML --export -o /home/sadnan/IdeaProjects/gbcl-evidence-extraction/annotations.csv"
+     -Dexec.args="--pipe -i [SOURCE_FILES_DIR] -x [ANNOTATED_FILES_DIR] --export -o [ANNOTATION_FILE_NAME].csv"
 ```
