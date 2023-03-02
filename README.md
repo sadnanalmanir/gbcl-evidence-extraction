@@ -1,10 +1,13 @@
 # gbcl-evidence-extraction  
-This repository contains the GATE NLP-based implementation of the project titled **A 
-pipeline for extracting evidence of crop loss from scientific reports** whose aim
-is to extract from preselected documents information that describes crop loss from 
-insect infiltration. 
+This repository implements a text-mining pipeline using the [GATE](https://gate.ac.uk) 
+NLP tool as part of the project titled **A pipeline for extracting evidence of crop 
+loss from scientific reports**. The project's aim is to extract information from 
+preselected document in the context of Global Burden of Crop Loss (GBCL) that describes 
+crop loss from insect infiltration. The pipeline achieves this goal by mining sentences 
+from the documents which are chosen based on the annotations submitted by the user. The
+results are saved in a single spreadsheet in TSV format.
 
-## Components
+## Main components
 - GATE NLP installation
 - `Main.java` contains command line options for I/O
 - `Pipeline.java` contains GATE plugins, gazetteers, JAPE rules
@@ -18,18 +21,27 @@ of length 1/2/3
 - `japerules` directory contains all necessary jape rules for 
 producing the final annotations
 
-## Set environments
+## Settings
 
 1. [Download](https://gate.ac.uk/download/) and install GATE
 2. Set path to `GATE_HOME` in `src/main/resources/project.properties`
 3. Before using any plugin, create `plugins` as 
-`[gate-installation-directory]/plugins` and load 
+`[gate-installation-directory]/plugins` and load .
+4. Select annotations of interest and length of consecutive sentences in 
+`CooccerenceMatcher.jape`.
+5. Select annotations of interest in `Main.java` for exporting results in the spreadsheet.
+
 > Note: Use [nimbletext](https://nimbletext.com/Live/1498428636/) to format gazetteer with `@id=`
 ## How to run
 
 ### Using the `Main` method
-- in Windows, set arguments as `--extract -i H:\html-corpus -o H:\extracted-text`
-- in Ubuntu, set arguments as `--extract -i /home/user/html-corpus -o /home/user/extracted-text`
+- in Windows, set options `pipe`, `export` and arguments as follows:
+
+`--pipe -i H:\[CORPUS_DIR] -x H:\[ANNOTATED_XML_DIR] --export -o [FILE_NAME].csv`
+- in Ubuntu
+
+`--pipe -i [CORPUS_DIR] -x [ANNOTATED_XML_DIR] --export -o [FILE_NAME].csv`
+
 ### Using the exec-maven-plugin
 1. Set the argument values directly inside the plugin inside `<configuration>`
 
@@ -43,8 +55,8 @@ producing the final annotations
         <mainClass>uk.ac.rothamsted.ide.gbcl.Main</mainClass>
         <arguments>
             <argument>--pipe</argument>
-            <argument>-i H:\[SOURCE_FILES_DIR]</argument>
-            <argument>-x H:\[ANNOTATED_FILES_DIR]</argument>
+            <argument>-i H:\[CORPUS_DIR]</argument>
+            <argument>-x H:\[ANNOTATED_XML_DIR]</argument>
             <argument>--export</argument>
             <argument>-o [ANNOTATION_FILE_NAME].csv</argument>
         </arguments>
@@ -55,13 +67,16 @@ or
 
 2. Use `mvn exec:java` from terminal
 
+`mvn clean compile package`
+
 For Windows
 ```shell
-mvn exec:java -D'exec.mainClass'='uk.ac.rothamsted.ide.gbcl.Main' -D'exec.args'="--pipe -i H:\[SOURCE_FILES_DIR] -x H:\[ANNOTATED_FILES_DIR] --export -o [ANNOTATION_FILE_NAME].csv"
+mvn exec:java -D'exec.mainClass'='uk.ac.rothamsted.ide.gbcl.Main' \
+    -D'exec.args'="--pipe -i H:\[CORPUS_DIR] -x H:\[ANNOTATED_XML_DIR] --export -o [FILE_NAME].csv"
 ```
 
 For Linux
 ```shell
  mvn exec:java -Dexec.mainClass=uk.ac.rothamsted.ide.gbcl.Main \
-     -Dexec.args="--pipe -i [SOURCE_FILES_DIR] -x [ANNOTATED_FILES_DIR] --export -o [ANNOTATION_FILE_NAME].csv"
+     -Dexec.args="--pipe -i [CORPUS_DIR] -x [ANNOTATED_XML_DIR] --export -o [FILE_NAME].csv"
 ```
