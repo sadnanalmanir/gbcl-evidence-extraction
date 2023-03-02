@@ -2,7 +2,7 @@
 This repository implements a text-mining pipeline using the [GATE](https://gate.ac.uk) 
 NLP tool as part of the project titled **A pipeline for extracting evidence of crop 
 loss from scientific reports**. The project's aim is to extract information from 
-preselected document in the context of Global Burden of Crop Loss (GBCL) that describes 
+preselected documents in the context of Global Burden of Crop Loss (GBCL) that describes 
 crop loss from insect infiltration. The pipeline achieves this goal by mining sentences 
 from the documents which are chosen based on the annotations submitted by the user. The
 results are saved in a single spreadsheet in TSV format.
@@ -15,7 +15,7 @@ results are saved in a single spreadsheet in TSV format.
 rule for selecting annotations simultaneously occurring in sentences 
 of length 1/2/3
 - `AnnotationExporter.java` takes array of annotations from the 
-`main(...)` method to export annotated results as a CSV file
+`main(...)` method to export annotated results as a TSV file
 - `gazetteers` directory contains proprietary lists of pests 
 (&copy;[CABI](https://www.cabi.org/)) including other lists
 - `japerules` directory contains all necessary jape rules for 
