@@ -214,7 +214,7 @@ public class Main {
                 if (runExport) {
                     // CooccurrenceMatcher.jape uses annotationTypes to annotate Sentences with various windows-length
                     // Coo_Export_1_sent indicates Cooccurrence in sentences of windows-1 i.e. each sentence
-                    String sourceAnnotationType = "Coo_Export_1_sent";
+                    String sourceAnnotationType = "Coo_P_2_sent";
                     // Annotations to export as csv columns for each sentence above
                     String[] targetAnnotationTypes = new String[]{"Pest", "Crop", "Location", "ImpactNumber", "ImpactNumberUnit", "ImpactDirection", "YieldMention"};
                     //String[] targetAnnotationTypes = new String[]{"Pest", "Crop", "Location", "ImpactNumberUnit"};

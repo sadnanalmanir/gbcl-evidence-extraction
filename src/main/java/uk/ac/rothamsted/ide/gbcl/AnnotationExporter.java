@@ -159,7 +159,8 @@ public class AnnotationExporter {
                 //System.out.println("not null");
                 textBuffWriter.write(doc.getName() +
                         "\t" + sourceAnnotationType +
-                        "\t" + doc.getContent().getContent(start, end) +
+                        // replace sentence line breaks with a whitespace
+                        "\t" + doc.getContent().getContent(start, end).toString().replace("\n", " ").trim() +
                         "\t" + pestAnnContent +
                         "\t" + cropAnnContent +
                         "\t" + locationAnnContent +

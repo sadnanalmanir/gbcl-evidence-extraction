@@ -30,16 +30,16 @@ Rule:extract
 		//System.out.println("Jape works @@@@@@@@@@@@@@@@@@@@@@@");
 		CooccurrenceMatcher om = new CooccurrenceMatcher();
         //List annotationTypes = Arrays.asList(new String[]{"Organism","TaxonomicUnit","Location","YIELD_IMPACT"});
-        List annotationTypes = Arrays.asList(new String[]{"Pest", "Crop", "Location", "ImpactNumber", "ImpactNumberUnit", "ImpactDirection", "YieldMention"});
+        //List annotationTypes = Arrays.asList(new String[]{"Pest", "Crop", "Location", "ImpactNumber", "ImpactNumberUnit", "ImpactDirection", "YieldMention"});
         //List annotationTypes = Arrays.asList(new String[]{"Pest", "Crop", "Location", "ImpactNumberUnit", "ImpactDirection"});
         //List annotationTypes = Arrays.asList(new String[]{"Pest", "Crop", "Location", "ImpactNumberUnit"});
         //List annotationTypes = Arrays.asList(new String[]{"Pest", "Crop", "Location"});
         //List annotationTypes = Arrays.asList(new String[]{"Pest", "Crop"});
-        //List annotationTypes = Arrays.asList(new String[]{"Pest"});
+        List annotationTypes = Arrays.asList(new String[]{"Pest"});
         //List annotationTypes = Arrays.asList(new String[]{"Pest", "ImpactNumberUnit", "ImpactDirection", "YieldMention"});
-		om.annotate(doc, annotationTypes, "Coo_Export", 1);
-		om.annotate(doc, annotationTypes, "Coo_Export", 2);
-		om.annotate(doc, annotationTypes, "Coo_Export", 3);
+		om.annotate(doc, annotationTypes, "Coo_P", 1);
+		om.annotate(doc, annotationTypes, "Coo_P", 2);
+		om.annotate(doc, annotationTypes, "Coo_P", 3);
 	}
 	catch(Exception e) {
 		e.printStackTrace();
