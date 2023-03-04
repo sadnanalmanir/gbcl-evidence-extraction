@@ -209,40 +209,6 @@ public class Main {
 
                     logger.info("Processing Corpus Time " + (System.currentTimeMillis() - time) / 1000 + " seconds");
                 }
-                /*
-                // Run annotation exporter
-                if (runExport) {
-                    // CooccurrenceMatcher.jape uses annotationTypes to annotate Sentences with various windows-length
-                    // Coo_Export_1_sent indicates Cooccurrence in sentences of windows-1 i.e. each sentence
-                    String sourceAnnotationType = "Coo_P_2_sent";
-                    // Annotations to export as csv columns for each sentence above
-                    String[] targetAnnotationTypes = new String[]{"Pest", "Crop", "Location", "ImpactNumber", "ImpactNumberUnit", "ImpactDirection", "YieldMention"};
-                    //String[] targetAnnotationTypes = new String[]{"Pest", "Crop", "Location", "ImpactNumberUnit"};
-                    //String[] targetAnnotationTypes = new String[]{"Pest", "Crop", "Location"};
-                    //String[] targetAnnotationTypes = new String[]{"Pest", "Crop"};
-                    //String[] targetAnnotationTypes = new String[]{"Pest"};
-                    //String[] targetAnnotationTypes = new String[]{"Pest", "ImpactNumberUnit", "ImpactDirection", "YieldMention"};
-
-
-                    // target annotations contained in a sentence as a list
-                    List<String> containedAnnotationTypes = Arrays.asList(targetAnnotationTypes);
-
-                    // GATE Annotated XML files generated from the pipeline execution
-                    // Linux path
-                    // String xmlOutputDirName = "/home/sadnan/corpus/croploss/classified/annotatedXML";
-                    // Windows path
-                    // String xmlOutputDirName = "C:\\Users\\manirm\\Documents\\ProjectData\\croploss-textmining\\corpus\\classified\\annotatedOutput";
-
-                    assert annotationResultsFileName != null;
-                    BufferedWriter annBuffWriter = new BufferedWriter(new FileWriter(annotationResultsFileName, false));
-
-                    AnnotationExporter annotationExporter = new AnnotationExporter();
-                    // Old implementation
-                    // AnnotationExporter.export2CSV(xmlOutputDirName, annBuffWriter);
-                    // Latest implementation
-                    annotationExporter.exportAnnotations2CSV(sourceAnnotationType, containedAnnotationTypes, xmlOutputDirName, annBuffWriter);
-                }
-                 */
 
                 // export annotations into a tsv-formatted file
                 if (runExport) {
@@ -281,7 +247,8 @@ public class Main {
                             "\n");
                     annOutputWriter.write(headers);
 
-
+                    // Sentences of sliding windows length 1/2/3
+                    // See CooccurrenceMatcher.jape for the available annotations
                     List<String> sourceAnnTypes = Arrays.asList(
                             "Coo_P_1_sent",
                             "Coo_P_2_sent",
@@ -305,6 +272,7 @@ public class Main {
                             "Coo_PCLInUIdYm_2_sent",
                             "Coo_PCLInUIdYm_3_sent"
                     );
+                    // Individual annotations present in the sentence annotations of sliding windows lengths 1/2/3
                     List<String> targetAnnotations = Arrays.asList(
                             "Pest",
                             "Crop",
