@@ -393,7 +393,7 @@ public class Pipeline implements Serializable {
     }
 
     public void execute(gate.Document doc) throws GateException {
-        logger.info("Running Pipeline...");
+        logger.info("Pipeline running...");
         gate.Corpus gateCorpus = Factory.newCorpus("corpus" + doc.getName());
         gateCorpus.add(doc);
         this.setCorpus(gateCorpus);
@@ -401,7 +401,7 @@ public class Pipeline implements Serializable {
 
         Factory.deleteResource(gateCorpus);
 
-        logger.info("...Pipeline complete");
+        logger.info("Pipeline complete");
     }
 
 }

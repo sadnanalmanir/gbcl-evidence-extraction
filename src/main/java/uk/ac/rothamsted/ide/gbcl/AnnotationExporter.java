@@ -184,6 +184,116 @@ public class AnnotationExporter {
         }
     }
 
+
+
+    protected void collectAnnotationRows(Document doc, String sourceAnnotation, Collection<String> individualAnnotation, BufferedWriter resultsWriter) throws InvalidOffsetException, IOException {
+
+        // Row of annotations retrieved
+        String allAnnotations;
+
+        // List of all source annotations
+        AnnotationSet sourceAS = doc.getAnnotations().get(sourceAnnotation);
+        List<Annotation> sourceAnns = new ArrayList<>(sourceAS);
+        sourceAnns.sort(new OffsetComparator());
+
+        // list for each of the column header to hold multiple annotation instances in the same sentences
+        // There may be multiple pests [pest1, pest2, pest3, ...] in the same sentence
+        Set<String> pestAnnContent = new HashSet<>();
+        Set<String> cropAnnContent = new HashSet<>();
+        Set<String> locationAnnContent = new HashSet<>();
+        Set<String> impactNumberAnnContent = new HashSet<>();
+        Set<String> impactNumberUnitAnnContent = new HashSet<>();
+        Set<String> impactDirectionAnnContent = new HashSet<>();
+        Set<String> yieldMentionAnnContent = new HashSet<>();
+
+        for (Annotation sourceAnn : sourceAnns) {
+            long start = sourceAnn.getStartNode().getOffset();
+            long end = sourceAnn.getEndNode().getOffset();
+
+
+            logger.info("sourceAnnotationType: " + sourceAnnotation);
+            for (String annotationType : individualAnnotation) {
+                logger.info("annotationType: " + annotationType);
+                //AnnotationSet annotationTypeMentions = doc.getAnnotations().get(annotationType,start,end);
+                Set<Annotation> annotationTypeMentions = doc.getAnnotations().get(annotationType, start, end);
+                if (annotationTypeMentions.isEmpty()) {
+                    //containsAll = false;
+                    break;
+                } else {
+                    //features.put("fake", "fake");
+
+                    for (Annotation ann : annotationTypeMentions) {
+                        String annString = getCleanAnnotationContent(doc.getContent().getContent(ann.getStartNode().getOffset(), ann.getEndNode().getOffset()).toString());
+                        logger.info("annString: " + annString);
+                        if (annotationType.equals("Pest")) {
+                            pestAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("Crop")) {
+                            cropAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("Location")) {
+                            locationAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("ImpactNumber")) {
+                            impactNumberAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("ImpactNumberUnit")) {
+                            impactNumberUnitAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("ImpactDirection")) {
+                            impactDirectionAnnContent.add(annString);
+                        }
+                        if (annotationType.equals("YieldMention")) {
+                            yieldMentionAnnContent.add(annString);
+                        }
+                    }
+                }
+            }
+
+
+
+            allAnnotations = doc.getName() +
+                        "\t" + sourceAnnotation +
+                        // replace sentence line breaks with a whitespace
+                        "\t" + getCleanAnnotationContent(doc.getContent().getContent(start, end).toString()) +
+                        "\t" + pestAnnContent +
+                        "\t" + cropAnnContent +
+                        "\t" + locationAnnContent +
+                        "\t" + impactNumberAnnContent +
+                        "\t" + impactNumberUnitAnnContent +
+                        "\t" + impactDirectionAnnContent +
+                        "\t" + yieldMentionAnnContent +
+                        "\n";
+            // write row to the spreadsheet
+            resultsWriter.write(allAnnotations);
+
+            // reset lists
+            pestAnnContent.clear();
+            cropAnnContent.clear();
+            locationAnnContent.clear();
+            impactNumberAnnContent.clear();
+            impactNumberUnitAnnContent.clear();
+            impactDirectionAnnContent.clear();
+            yieldMentionAnnContent.clear();
+
+        }
+
+    }
+
+
+    private String getCleanAnnotationContent(String originalAnnotationContent) {
+        // New line Unix and Windows
+        final String NEW_LINE_UNIX = "\n";
+        final String NEW_LINE_WINDOWS = "\r\n";
+
+        if (originalAnnotationContent.contains(NEW_LINE_WINDOWS)){
+            return originalAnnotationContent.replace(NEW_LINE_WINDOWS, " ").trim();
+        } else if (originalAnnotationContent.contains(NEW_LINE_UNIX)){
+            return originalAnnotationContent.replace(NEW_LINE_UNIX, " ").trim();
+        } else
+            return originalAnnotationContent;
+    }
+
     public static void main(String[] args) throws Exception {
         // CooccurrenceMatcher.jape uses annotationTypes to annotate Sentences with various windows-length
         // Coo_Export_1_sent indicates Cooccurrence in sentences of windows-1 i.e. each sentence

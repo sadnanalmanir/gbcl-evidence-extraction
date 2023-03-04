@@ -28,8 +28,8 @@ public class CooccurrenceMatcher {
             long end = sentencesAnns.get(i+(contextSize-1)).getEndNode().getOffset();
 
             FeatureMap features = Factory.newFeatureMap();
-            logger.info("Search for annotations "+annotationTypes +" in sentence window "+contextSize);
-            //System.out.println("Search for annotations "+annotationTypes +" in sentence window "+contextSize);
+            // logger.info("Searching for annotations "+annotationTypes +" in sentence window "+contextSize);
+            // System.out.println("Search for annotations "+annotationTypes +" in sentence window "+contextSize);
 
             boolean containsAll = true;
             for(String annotationType : annotationTypes){

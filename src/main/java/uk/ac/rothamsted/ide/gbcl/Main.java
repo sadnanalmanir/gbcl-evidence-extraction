@@ -209,7 +209,7 @@ public class Main {
 
                     logger.info("Processing Corpus Time " + (System.currentTimeMillis() - time) / 1000 + " seconds");
                 }
-
+                /*
                 // Run annotation exporter
                 if (runExport) {
                     // CooccurrenceMatcher.jape uses annotationTypes to annotate Sentences with various windows-length
@@ -241,6 +241,104 @@ public class Main {
                     // AnnotationExporter.export2CSV(xmlOutputDirName, annBuffWriter);
                     // Latest implementation
                     annotationExporter.exportAnnotations2CSV(sourceAnnotationType, containedAnnotationTypes, xmlOutputDirName, annBuffWriter);
+                }
+                 */
+
+                // export annotations into a tsv-formatted file
+                if (runExport) {
+                    // initialize GATE
+                    AnnotationExporter exporter = new AnnotationExporter();
+                    // initialize directory with annotated XML files
+                    Map<String, String> fileIndex = Utils.initFileIndex(xmlOutputDirName);
+
+                    // Monitor file currently being processed.
+                    int numberOfFilesToProcess = fileIndex.size();
+                    if(processOnlyDocuments.size()>1){
+                        numberOfFilesToProcess = processOnlyDocuments.size()-1;
+                    }
+                    int numberOfFileProcessed = 0;
+
+                    // append to the result tsv
+                    boolean append = false;
+
+                    BufferedWriter annOutputWriter;
+                    assert annotationResultsFileName != null;
+                    FileWriter fileWriter = new FileWriter(annotationResultsFileName, append);
+                    annOutputWriter = new BufferedWriter(fileWriter);
+
+                    // Add headers to the columns in the spreadsheet
+                    String headers = (
+                            "document" +
+                            "\t" + "Annotation Type" +
+                            "\t" + "Sentence" +
+                            "\t" + "Pest" +
+                            "\t" + "Crop" +
+                            "\t" + "Location" +
+                            "\t" + "ImpactNumber" +
+                            "\t" + "ImpactNumberUnit" +
+                            "\t" + "ImpactDirection" +
+                            "\t" + "YieldMention" +
+                            "\n");
+                    annOutputWriter.write(headers);
+
+
+                    List<String> sourceAnnTypes = Arrays.asList(
+                            "Coo_P_1_sent",
+                            "Coo_P_2_sent",
+                            "Coo_P_3_sent",
+                            "Coo_PC_1_sent",
+                            "Coo_PC_2_sent",
+                            "Coo_PC_3_sent",
+                            "Coo_PCL_1_sent",
+                            "Coo_PCL_2_sent",
+                            "Coo_PCL_3_sent",
+                            "Coo_PCLIn_1_sent",
+                            "Coo_PCLIn_2_sent",
+                            "Coo_PCLIn_3_sent",
+                            "Coo_PCLInU_1_sent",
+                            "Coo_PCLInU_2_sent",
+                            "Coo_PCLInU_3_sent",
+                            "Coo_PCLInUId_1_sent",
+                            "Coo_PCLInUId_2_sent",
+                            "Coo_PCLInUId_3_sent",
+                            "Coo_PCLInUIdYm_1_sent",
+                            "Coo_PCLInUIdYm_2_sent",
+                            "Coo_PCLInUIdYm_3_sent"
+                    );
+                    List<String> targetAnnotations = Arrays.asList(
+                            "Pest",
+                            "Crop",
+                            "Location",
+                            "ImpactNumber",
+                            "ImpactNumberUnit",
+                            "ImpactDirection",
+                            "YieldMention"
+                    );
+
+                    for (String fileName : fileIndex.keySet()) {
+                        if(processOnlyDocuments.size()>1 && !processOnlyDocuments.contains(fileName)){
+                            continue;
+                        }
+                        numberOfFileProcessed++;
+
+                        logger.info("Exporting annotations from \n===============================================================\n"
+                                + "Document (" + numberOfFileProcessed + " of " + numberOfFilesToProcess + "): " + fileName + " AT " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date())
+
+                                + "\n===============================================================\n");
+
+                        gate.Document doc = Factory.newDocument(new URL(fileIndex.get(fileName)));
+                        doc.setName(fileName);
+
+
+
+                        for (String annotation: sourceAnnTypes){
+                            exporter.collectAnnotationRows(doc, annotation, targetAnnotations, annOutputWriter);
+                        }
+
+                        Factory.deleteResource(doc);
+                    }
+
+                    annOutputWriter.close();
                 }
 
             }
