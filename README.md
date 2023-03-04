@@ -7,6 +7,9 @@ crop loss from insect infiltration. The pipeline achieves this goal by mining se
 from the documents which are chosen based on the annotations submitted by the user. The
 results are saved in a single spreadsheet in TSV format.
 
+## Limitations
+- Pipeline fails to recognize sentences if source text contain single and double quote. 
+
 ## Main components
 - GATE NLP installation **v8.X only**
 - `Main.java` contains command line options for I/O
